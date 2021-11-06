@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package chat;
+option go_package="./chat";
+
+message MSG_ListRooms_CS{
+}
+
+message MSG_ListRooms_SC{
+	repeated string rooms = 1;
+}
+
+message MSG_CreateChatRoom_CS{
+	string name = 1;
+}
+
+message MSG_CreateChatRoom_SC{
+	bool retcode = 1;
+}
+
+message MSG_JoinRoom_CS{
+	string name = 1;
+}
+
+message MSG_JoinRoom_SC{
+	bool retcode = 1;
+}
+
+message MSG_LeaveRoom_CS{
+}
+
+message MSG_LeaveRoom_SC{
+	bool retcode = 1;
+}
+
+message MSG_SendMessage_CS{
+	string message = 1;
+}
+
+message MSG_SendMessage_SC{
+	repeated string message = 1;
+}
+
+message MSG_SendGMString_CS{
+	string reqgm = 1;
+}
+
+message MSG_SendGMString_SC{
+	string retgm = 1;
+}
+

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package login;
+option go_package="./login";
+
+message MSG_StartLogin_CS{
+	string name = 1;
+}
+
+message MSG_StartLogin_SC{
+}
+
+message MSG_CreateRole_CS{
+	string name = 1;
+}
+
+message MSG_CreateRole_SC{
+	bool retcode = 1;
+}
+
