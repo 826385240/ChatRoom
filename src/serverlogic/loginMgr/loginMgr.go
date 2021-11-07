@@ -24,9 +24,7 @@ func (this *LoginManager) MSG_StartLogin_CS_CB(task *tcptask.TcpTask, msg *login
 
 func (this *LoginManager) MSG_CreateRole_CS_CB(task *tcptask.TcpTask, msg *login.MSG_CreateRole_CS) {
 	//如果不存在在就创建角色
-	roleMgr.RoleManager.CreateRole(task, msg.GetName())
-
-	ret := &login.MSG_CreateRole_SC{Retcode: true}
+	ret := &login.MSG_CreateRole_SC{Retcode: roleMgr.RoleManager.CreateRole(task, msg.GetName())}
 	logic.SendMsg(task, cmd.MSG_CreateRole_SC, unsafe.Pointer(ret))
 }
 

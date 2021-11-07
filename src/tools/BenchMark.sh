@@ -1,8 +1,8 @@
 #!/bin/bash
 
-clientnum=200
+clientnum=1
 
 for i in $(seq 1 $clientnum)
 do
-    ./mainclient &
+    ./mainclient $i &
 done

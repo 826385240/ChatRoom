@@ -2,12 +2,12 @@
 package tcptask
 
 import (
-	"bytes"
-	"encoding/binary"
 	"ChatRoom/src/lib/common"
 	"ChatRoom/src/lib/logger"
 	"ChatRoom/src/lib/message"
 	"ChatRoom/src/lib/socket"
+	"bytes"
+	"encoding/binary"
 	"net"
 	"sync"
 	"unsafe"
@@ -173,9 +173,20 @@ func (this *TcpTask) SendToWChan(d com.MsgToLogicPtr) {
 //关闭写协程
 func (this *TcpTask) CloseWChan() {
 	close(this.w_chan)
+	this.r_chan = nil
 }
 
 //关闭读协程
 func (this *TcpTask) CloseRChan() {
 	close(this.r_chan)
+	this.r_chan = nil
+}
+
+//是否写协程关闭
+func (this *TcpTask) IsWChanValid() bool {
+	return this.w_chan != nil
+}
+//是否读协程关闭
+func (this *TcpTask) IsRChanValid() bool {
+	return this.r_chan != nil
 }

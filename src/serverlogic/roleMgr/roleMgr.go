@@ -2,9 +2,11 @@ package roleMgr
 
 import (
 	"ChatRoom/src/lib/tcptask"
+	"time"
 )
 
 type Role struct{
+	loginTime int64
 	name string
 	task *tcptask.TcpTask
 }
@@ -18,12 +20,9 @@ var RoleManager=&roleManager{allRoles: map[string]Role{}, client2role: map[*tcpt
 
 func (this *roleManager) CreateRole(t *tcptask.TcpTask, n string) bool {
 	_,ok := this.allRoles[n]
-
-	if !ok {
-		this.allRoles[n]=Role{name: n, task:t}
-		this.client2role[t]=n
-	}
-	return ok
+	this.client2role[t]=n
+	this.allRoles[n]=Role{name: n, task:t, loginTime:time.Now().Unix()}
+	return !ok
 }
 
 func (this *roleManager) GetRoleName(task *tcptask.TcpTask) string {
@@ -34,6 +33,7 @@ func (this *roleManager) GetRoleName(task *tcptask.TcpTask) string {
 	}
 	return ""
 }
+
 func (this *roleManager) GetTcpTask(name string) *tcptask.TcpTask {
 	r,ok := this.allRoles[name]
 	if !ok {
@@ -41,4 +41,12 @@ func (this *roleManager) GetTcpTask(name string) *tcptask.TcpTask {
 	}
 
 	return r.task
+}
+func (this *roleManager) GetRoleLoginTime(name string) int64 {
+	r,ok := this.allRoles[name]
+	if !ok {
+		return -1
+	}
+
+	return r.loginTime
 }

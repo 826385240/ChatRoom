@@ -201,6 +201,9 @@ const (
 )
 
 func ConvertConnById(o com.ConnToLogicPtr) com.IBaseTcpConn {
+	if o == nil {
+		return nil
+	}
 	if o.ConnType == EXEC_FLAG_TCPTASK {
 		return (*tcptask.TcpTask)(o.Conn)
 	}

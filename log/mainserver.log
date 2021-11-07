@@ -1,3 +1,0 @@
-2021/11/07 00:34:41 logger.go:35: PANIC [error:listen tcp 127.0.0.1:9000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.]
-2021/11/07 00:36:34 logger.go:35: PANIC [error:listen tcp 127.0.0.1:9000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.]
-2021/11/07 02:27:22 logger.go:35: PANIC [error:listen tcp 127.0.0.1:9000: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.]

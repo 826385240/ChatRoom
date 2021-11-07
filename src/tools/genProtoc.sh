@@ -1,9 +1,9 @@
-
+rootDir=$(pwd)
 protoOutDir=protoout
-outDir=./src/$protoOutDir
-protoDir=./proto
+outDir=$rootDir/src/$protoOutDir
+protoDir=$rootDir/proto
 
-cd $GOPATH
+cd $rootDir
 files=$(ls $protoDir)
 declare -A pkgToFiles=()
 
@@ -55,15 +55,9 @@ function genProto()
 	do  
         local pkgFils=${pkgToFiles[$pkg]}
         for file in $(echo $pkgFils)
-        do
+        do				
             cp -fr $protoDir/$file $protoDir/$pkg/
-            protoc --go_out=$outDir/$pkg $protoDir/$pkg/*.proto
-
-            local genOutPath=$outDir/$pkg/proto
-            if [ -d $genOutPath ];then
-                mv $genOutPath/$pkg/* $outDir/$pkg
-                rm -fr $genOutPath
-            fi
+            protoc --go_out=$outDir --proto_path=$protoDir/$pkg $file
         done
     done
 
@@ -74,7 +68,7 @@ function genProto()
         if [ $filesnum -eq 0 ];then
             rm -fr $outDir/$pkg
         fi
-
+	
         if [ -d $protoDir/$pkg ];then
             rm -fr $protoDir/$pkg
         fi
@@ -85,7 +79,7 @@ function goInstallPkgs()
 {
 	for pkg in ${!pkgToFiles[@]}  
     do
-        go install -gcflags "-N -l" $protoOutDir/$pkg
+        go install -gcflags "-N -l" $outDir/$pkg
     done
 }
 

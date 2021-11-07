@@ -51,4 +51,6 @@ type IBaseTcpConn interface {
 	CloseConn()
 	CloseWChan()
 	CloseRChan()
+	IsWChanValid() bool
+	IsRChanValid() bool
 }

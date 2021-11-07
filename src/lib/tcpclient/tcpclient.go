@@ -173,9 +173,20 @@ func (this *TcpClient) SendToWChan(d com.MsgToLogicPtr) {
 //关闭写协程
 func (this *TcpClient) CloseWChan() {
 	close(this.w_chan)
+	this.w_chan = nil
 }
 
 //关闭读协程
 func (this *TcpClient) CloseRChan() {
 	close(this.r_chan)
+	this.r_chan = nil
+}
+
+//是否写协程关闭
+func (this *TcpClient) IsWChanValid() bool {
+	return this.w_chan != nil
+}
+//是否读协程关闭
+func (this *TcpClient) IsRChanValid() bool {
+	return this.r_chan != nil
 }

@@ -1,2 +1,2 @@
-cd /d D:\ChatRoom\src\mainclient
+cd /d .\src\mainclient
 go install

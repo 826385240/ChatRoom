@@ -3,12 +3,9 @@ package chatMgr
 import (
 	"ChatRoom/src/clientlogic/operateMgr"
 	"ChatRoom/src/cmdid"
-	"ChatRoom/src/lib/logic"
 	"ChatRoom/src/lib/tcpclient"
 	"ChatRoom/src/protoout/chat"
-	"ChatRoom/src/protoout/login"
 	"fmt"
-	"unsafe"
 )
 
 type ChatManager struct {
@@ -32,7 +29,7 @@ func (this *ChatManager) MSG_ListRooms_SC_CB(client *tcpclient.TcpClient, msg *c
 			fmt.Println(msg.Rooms[i])
 		}
 	}
-	operateMgr.OperateMgr.ShowOperate(client)
+	go operateMgr.OperateMgr.ShowOperate(client)
 }
 
 func (this *ChatManager) MSG_CreateChatRoom_SC_CB(client *tcpclient.TcpClient, msg *chat.MSG_CreateChatRoom_SC) {
@@ -41,7 +38,7 @@ func (this *ChatManager) MSG_CreateChatRoom_SC_CB(client *tcpclient.TcpClient, m
 	} else {
 		fmt.Println("创建聊天室失败,聊天室可能已经存在!")
 	}
-	operateMgr.OperateMgr.ShowOperate(client)
+	go operateMgr.OperateMgr.ShowOperate(client)
 }
 
 func (this *ChatManager) MSG_JoinRoom_SC_CB(client *tcpclient.TcpClient, msg *chat.MSG_JoinRoom_SC) {
@@ -50,7 +47,7 @@ func (this *ChatManager) MSG_JoinRoom_SC_CB(client *tcpclient.TcpClient, msg *ch
 	} else {
 		fmt.Println("加入聊天室失败,聊天室可能不存在!")
 	}
-	operateMgr.OperateMgr.ShowOperate(client)
+	go operateMgr.OperateMgr.ShowOperate(client)
 }
 
 func (this *ChatManager) MSG_LeaveRoom_SC_CB(client *tcpclient.TcpClient, msg *chat.MSG_LeaveRoom_SC) {
@@ -59,7 +56,7 @@ func (this *ChatManager) MSG_LeaveRoom_SC_CB(client *tcpclient.TcpClient, msg *c
 	} else {
 		fmt.Println("离开聊天室失败,聊天室可能不存在!")
 	}
-	operateMgr.OperateMgr.ShowOperate(client)
+	go operateMgr.OperateMgr.ShowOperate(client)
 }
 
 func (this *ChatManager) MSG_SendMessage_SC_CB(client *tcpclient.TcpClient, msg *chat.MSG_SendMessage_SC) {
@@ -67,10 +64,14 @@ func (this *ChatManager) MSG_SendMessage_SC_CB(client *tcpclient.TcpClient, msg 
 		fmt.Println(msg.Message[i])
 	}
 
-	operateMgr.OperateMgr.ShowOperate(client)
+	go operateMgr.OperateMgr.ShowOperate(client)
 }
 
 func (this *ChatManager) MSG_SendGMString_SC_CB(client *tcpclient.TcpClient, msg *chat.MSG_SendGMString_SC) {
-	ret := &login.MSG_CreateRole_CS{}
-	logic.SendMsg(client, cmd.MSG_CreateRole_CS, unsafe.Pointer(ret))
+	if msg.Retgm != "" {
+		fmt.Println(msg.Retgm)
+	} else {
+		fmt.Println("执行GM指令失败!")
+	}
+	go operateMgr.OperateMgr.ShowOperate(client)
 }

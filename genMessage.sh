@@ -20,6 +20,7 @@ MAX_MSG_NUM=2048
 #消息回调处理者 格式: 包名.处理者类型
 MsgExecutor=("tcptask.TcpTask" "tcpclient.TcpClient")
 
+gomodname=src/
 protoOutDir=protoout
 cmdDir=cmdid
 rootDir=$(pwd)
@@ -107,6 +108,13 @@ function preCheck()
         echo "错误,找不了proto目录!"
         exit 1
     fi
+	
+	if [ -f $rootDir/go.mod ];then
+		local name=$( head -n 1 $rootDir/go.mod | awk '{print $2}')
+		if [ "$name" != "" ];then
+			gomodname=${name}/src/
+		fi
+	fi
 
     cd $protoDir 
     rm -fr $msgFile
@@ -172,7 +180,7 @@ function writeImportPkgBegin()
     printf "//***********************导入依赖的包***********************\n" >> $msgFile
     printf "package cmd\n\n" >> $msgFile
     printf "import (\n" >> $msgFile 
-    printf "\t\"$protoPkgPath\"\n" >> $msgFile 
+    printf "\t\"${protoPkgPath}\"\n" >> $msgFile 
 }
 
 function writeImportPkgEnd()
@@ -184,7 +192,7 @@ function writeImportMsgPkg()
 {
 	for key in ${!PkgToFiles[@]}  
 	do  
-		printf "\t\"$protoOutDir/$key\"\n" >> $msgFile 
+		printf "\t\"${gomodname}${protoOutDir}/$key\"\n" >> $msgFile 
     done
 }
 
@@ -227,8 +235,8 @@ function writeGenAndConvertMsg()
 }
 
 function writeImportHandlerPkg(){
-	printf "\t\"lib/common\"\n" >> $msgFile 
-    printf "\t\"lib/handler\"\n" >> $msgFile 
+	printf "\t\"${gomodname}lib/common\"\n" >> $msgFile 
+    printf "\t\"${gomodname}lib/handler\"\n" >> $msgFile 
 }
 
 function writeImportMsgCBPkg()
@@ -248,7 +256,7 @@ function writeImportMsgCBPkg()
                 if [ "$exist" != "" ];then
                     #获得消息回调者的包路径
                     local importPath=$(echo $goFile | sed "s/^\.\///g" | sed "s/\w\+\.go$//g" | sed "s/\/$//g")
-                    printf "\t\"$importPath\"\n" >> $msgFile 
+                    printf "\t\"${gomodname}${importPath}\"\n" >> $msgFile 
 
                     break
                 fi
@@ -300,6 +308,9 @@ function writeMsgExecFlag(){
 
 function writeConvertConn(){
     printf "func ConvertConnById(o com.ConnToLogicPtr) com.IBaseTcpConn {\n" >> $msgFile
+	printf "\tif o == nil {\n" >> $msgFile
+	printf "\t\treturn nil\n" >> $msgFile
+	printf "\t}\n" >> $msgFile
     for executor in ${MsgExecutor[*]} 
     do
         local exeName=$(echo $executor | grep -E -o "[0-9a-zA-Z]+$")

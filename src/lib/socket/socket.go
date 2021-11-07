@@ -2,8 +2,8 @@
 package socket
 
 import (
-	"io"
 	"ChatRoom/src/lib/logger"
+	"io"
 	"net"
 )
 
@@ -32,7 +32,10 @@ func (this *Socket) ReadFromConn() error {
 			}
 			return err
 		}
+	} else {
+		return err
 	}
+
 	//}
 	return nil
 }

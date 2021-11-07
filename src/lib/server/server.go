@@ -109,7 +109,6 @@ func (this *Server) GetMsgFromConn(conn com.IBaseTcpConn) {
 func (this *Server) PostMsgToConn(conn com.IBaseTcpConn) {
 	conn.WgWait()
 	defer conn.CloseConn()
-	defer conn.CloseWChan()
 	defer conn.CloseRChan()
 	for {
 		ct := conn.RecvFromRChan()
